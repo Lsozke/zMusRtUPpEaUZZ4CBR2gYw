@@ -1,16 +1,16 @@
 'use strict';
 
 const co = require('co');
-const MongoRateStore = require('../lib/mongo_rate_store');
+const MongoRateStore = require('../../lib/mongo_rate_store');
+const config = require('../../lib/job_config');
 const chai = require('chai');
 const should = chai.should();
-//const expect = chai.expect;
+const expect = chai.expect;
 const assert = chai.assert;
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 
 describe('MongoRateStore', () => {
-	const MONGO_URL = 'mongodb://challenge:12()qwOP@ds013898.mongolab.com:13898/challenge';
 	let store;
 
 	beforeEach(() => {
@@ -27,8 +27,10 @@ describe('MongoRateStore', () => {
 		});
 
 		it('should connect', () => {
-			let result = store.connect(MONGO_URL);
-			return result.should.eventually.be.fulfilled;
+			let result = store.connect(config.mongodb.url);
+			return result.should.eventually.be.fulfilled.then(() => {
+				store.should.have.property('db');
+			});
 		});
 	});
 
@@ -38,7 +40,7 @@ describe('MongoRateStore', () => {
 		it('should save the value', () => {
 			let result = co(function* () {
 				// make connection
-				yield store.connect(MONGO_URL);
+				yield store.connect(config.mongodb.url);
 				// save record
 				let payload = {test: true};
 				yield store.persist(payload);

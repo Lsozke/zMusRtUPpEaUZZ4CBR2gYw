@@ -1,32 +1,57 @@
 'use strict';
 
-const loadGruntConfig = require('load-grunt-config');
-const path = require('path');
+const time_grunt = require('time-grunt');
 
-module.exports = (grunt) => {
-	grunt.loadNpmTasks('grunt-mocha-test');
-	grunt.loadNpmTasks('grunt-eslint');
+module.exports = function (grunt) {
+	time_grunt(grunt);
 
 	grunt.initConfig({
-		mochaTest: {
-			test: {
-				options: {
-					reporter: 'spec',
-					quiet: false,
-					clearRequireCache: false
-				},
-				src: ['test/**/*.js']
-			}
-		},
 		eslint: {
 			options: {
 				configFile: '.eslintrc'
 			},
-			target: ['test/*.js', 'bin/*.js', 'lib/*.js']
+			target: [
+				'**/*.js',
+				'!**/node_modules/**',
+				'!**/coverage/**'
+			]
+		},
+
+		istanbul_check_coverage: {
+			default: {
+				options: {
+					coverageFolder: 'coverage'
+				}
+			}
+		},
+
+		mocha_istanbul: {
+			coverage: {
+				src: [
+					'test/**/*.js'
+				],
+				options: {
+					coverage: true,
+					reporter: 'spec',
+					istanbulOptions: [
+						'--include-all-sources',
+						'-x', 'Gruntfile.js',
+						'-x', 'worker.js',
+						'-x', 'seed.js'
+					]
+				}
+			}
 		}
 	});
 
+	grunt.event.on('coverage', function (lconvFileContents, done) {
+		done();
+	});
+
+	grunt.loadNpmTasks('grunt-eslint');
+	grunt.loadNpmTasks('grunt-mocha-istanbul');
+
+	grunt.registerTask('default', ['']);
+	grunt.registerTask('coverage', ['mocha_istanbul:coverage']);
 	grunt.registerTask('lint', ['eslint']);
-	grunt.registerTask('test', ['mochaTest']);
-	grunt.registerTask('default', []);
 };

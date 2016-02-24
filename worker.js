@@ -1,5 +1,4 @@
 'use strict';
-
 const co = require('co');
 const config = require('./lib/job_config');
 const JobConsumer = require('./lib/job_consumer');
@@ -17,11 +16,6 @@ const MAX_SUCCESS = 10;
 const MAX_FAIL = 3;
 const DELAY_SUCCESS = 60; // seconds
 const DELAY_FAIL = 3; // seconds
-
-function onError(err) {
-	// log any uncaught errors
-	console.error(err.stack);
-}
 
 co(function* () {
 	// init all connections in parallel
@@ -43,7 +37,7 @@ co(function* () {
 		try {
 			// retrieve exchange rate
 			console.log('Try get Exchange Rate ' + job.payload.from + ':' + job.payload.to);
-			rate = yield forex.getRate(job.payload.from, job.payload.to);
+			rate = yield forex.getRate(job.payload.from, job.payload.to, config.forex);
 			console.log('Exchange Rate received', rate);
 		} catch (err) {
 			// a null object indicates that it is failed to retrieve
@@ -94,4 +88,6 @@ co(function* () {
 		}
 		// iterate to next watching loop
 	}
-}).catch(onError);
+}).catch((err) => {
+	console.error(err.stack);
+});

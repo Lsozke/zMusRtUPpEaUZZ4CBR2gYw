@@ -1,7 +1,7 @@
 'use strict';
 
-const JobProducer = require('../lib/job_producer');
-const config = require('../lib/job_config');
+const JobProducer = require('../../lib/job_producer');
+const config = require('../../lib/job_config');
 const co = require('co');
 const chai = require('chai');
 const should = chai.should();
@@ -11,6 +11,8 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 
 describe('JobProducer', function () {
+	let tube_name = config.beanstalk.tube + 'Test';
+
 	describe('#connect()', function () {
 		it('Should be connected', function () {
 			let producer = new JobProducer();
@@ -36,7 +38,7 @@ describe('JobProducer', function () {
 				from: 'USD',
 				to: 'HKD'
 			};
-			let result = producer.putJob(job_model, config.beanstalk.tube, config.beanstalk.delay);
+			let result = producer.putJob(job_model, tube_name, config.beanstalk.delay);
 			return result.should.eventually.be.rejected;
 		});
 
@@ -48,7 +50,7 @@ describe('JobProducer', function () {
 					from: 'USD',
 					to: 'HKD'
 				};
-				return yield producer.putJob(job_model, config.beanstalk.tube, config.beanstalk.delay);
+				return yield producer.putJob(job_model, tube_name, config.beanstalk.delay);
 			});
 			return result.should.eventually.be.a('string');
 		});

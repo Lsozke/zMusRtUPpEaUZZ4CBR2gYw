@@ -14,30 +14,24 @@
 4. `Mongo Data Store` - Connect to a MongoDB to save data
 5. `Job Exit Strategy` - Make decision on when to exit a job
 6. `Consumer Worker` - Glue to above components into a flow
-7. `Seed` - Just create a data to initialize the flow
-
-## Notes
----
-* `grunt lint` is switched off in `npm test` while it generates strange warnings. Anyway the codes follow the coding styles, guidelines, and JSDoc.
-
-## External Services
----
-FXCM - Return Exchange Rates in XML: http://rates.fxcm.com/RatesXML
-MongoLab - MongoDB provider: http://www.mongolab.com/
 
 ## Configurations
 ---
-Configurations are inside here
-```
-lib/job_config.js
-```
+* All external connectivity configurations are inside `lib/job_config.js`
 
+* Worker specific settings are inside `lib/consumer_worker.js`
+```
+const MAX_SUCCESS = 10;
+const MAX_FAIL = 3;
+const DELAY_SUCCESS = 60; // seconds
+const DELAY_FAIL = 3; // seconds
+```
 
 ## How to run
 ---
 To start a consumer worker
 ```
-node consumer_worker
+node worker
 ```
 
 To seed a job (by default USD:HKD)
@@ -74,3 +68,12 @@ Fail to get Exchange Rate No value for the pair ABC:DEF
 Job Attempts Success/Fail = undefined/3
 Job failed with failAttempts=3
 ```
+
+## Notes
+---
+* `grunt lint` is switched off in `npm test` while it generates strange warnings. Anyway the codes follow the coding styles, guidelines, and JSDoc.
+
+## External Services
+---
+FXCM - Return Exchange Rates in XML: http://rates.fxcm.com/RatesXML
+MongoLab - MongoDB provider: http://www.mongolab.com/
