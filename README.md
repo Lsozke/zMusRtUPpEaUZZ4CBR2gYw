@@ -8,24 +8,34 @@
 
 ## Components
 ---
-1. `Job Producer` - Connect to beanstalkd/tube and put a job, with payload and delay
-2. `Job Consumer` - Connect to beanstalkd/tube and reserve a job, destroy a job when done
-3. `Forex` - Connect to a service provider (e.g. xe.com) to retrieve exchange rate
-4. `Mongo Data Store` - Connect to a MongoDB to save data
+1. `Job Producer` - Put jobs to beanstalkd/tube, with payload and delay
+2. `Job Consumer` - Reserve jobs from beanstalkd/tube, destroy/bury a job when necessary
+3. `Forex` - Connect to a exchange rate service provider
+4. `Mongo Data Store` - Save data to MongoDB
 5. `Job Exit Strategy` - Make decision on when to exit a job
-6. `Consumer Worker` - Glue to above components into a flow
+6. `Worker` - Glue to above components into a flow
 
 ## Configurations
 ---
 * All external connectivity configurations are inside `lib/job_config.js`
 
-* Worker specific settings are inside `lib/consumer_worker.js`
+* Worker specific settings are inside `worker.js`
 ```
 const MAX_SUCCESS = 10;
 const MAX_FAIL = 3;
 const DELAY_SUCCESS = 60; // seconds
 const DELAY_FAIL = 3; // seconds
 ```
+
+## Testing
+---
+
+###### Unit tests
+* Cover major requirements, without external connectivity
+* Usually it should mock the underlying lib, here I just skip it
+
+###### Integration tests
+* Cover the connectivity to external services
 
 ## How to run
 ---
@@ -71,7 +81,7 @@ Job failed with failAttempts=3
 
 ## Notes
 ---
-* `grunt lint` is switched off in `npm test` while it generates strange warnings. Anyway the codes follow the coding styles, guidelines, and JSDoc.
+* `grunt lint` is producing strange warnings. Anyway the codes follow the coding styles, guidelines, and JSDoc.
 
 ## External Services
 ---
