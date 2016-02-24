@@ -1,5 +1,4 @@
 ## Design Concepts
----
 1. Break down the system into individual components
 2. Each component should work on their own, i.e. de-coupled and reusable
 3. Unit test on each component
@@ -7,7 +6,6 @@
 5. Worker should be scalable, i.e. able to run single/multiple instances in single/multiple containers
 
 ## Components
----
 1. `Job Producer` - Put jobs to beanstalkd/tube, with payload and delay
 2. `Job Consumer` - Reserve jobs from beanstalkd/tube, destroy/bury a job when necessary
 3. `Forex` - Connect to a exchange rate service provider
@@ -16,7 +14,6 @@
 6. `Worker` - Glue to above components into a flow
 
 ## Configurations
----
 * All external connectivity configurations are inside `lib/job_config.js`
 
 * Worker specific settings are inside `worker.js`
@@ -28,7 +25,6 @@ const DELAY_FAIL = 3; // seconds
 ```
 
 ## Testing
----
 
 ###### Unit tests
 * Cover major requirements, without external connectivity
@@ -38,7 +34,6 @@ const DELAY_FAIL = 3; // seconds
 * Cover the connectivity to external services
 
 ## How to run
----
 To start a consumer worker
 ```
 node worker
@@ -53,14 +48,15 @@ To seed a job and specific currency pair
 ```
 node seed USD HKD
 ```
-Supported currency pairs can be found in the XML http://rates.fxcm.com/RatesXML
-XPath: /Rates/Rate/Symbol
-e.g.
-EURUSD
-USDJPY
-GBPUSD
-NZDUSD
-USDHKD
+Supported currency pairs. e.g.
+```
+EUR USD
+USD JPY
+GBP USD
+NZD USD
+USD HKD
+```
+Full list can be found inside the [FXCM XML] (http://rates.fxcm.com/RatesXML) with XPath `/Rates/Rate/Symbol`
 
 No error occurs when seeding non-exist pair:
 ```
@@ -80,10 +76,8 @@ Job failed with failAttempts=3
 ```
 
 ## Notes
----
 * `grunt lint` is producing strange warnings. Anyway the codes follow the coding styles, guidelines, and JSDoc.
 
 ## External Services
----
-FXCM - Return Exchange Rates in XML: http://rates.fxcm.com/RatesXML
-MongoLab - MongoDB provider: http://www.mongolab.com/
+* FXCM - Return Exchange Rates in XML: http://rates.fxcm.com/RatesXML
+* MongoLab - MongoDB provider: http://www.mongolab.com/
