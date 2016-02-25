@@ -72,7 +72,7 @@ co(function* () {
 				yield consumer.buryJob(job.job_id);
 				break;
 			case 1:	// normal exit
-				console.log('Job failed with successAttempts=' + job.payload.successAttempts);
+				console.log('Job finished with successAttempts=' + job.payload.successAttempts);
 				// nothing more for this job
 				// clean up
 				yield consumer.cleanUpJob(job.job_id);
